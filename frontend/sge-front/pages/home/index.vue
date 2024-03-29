@@ -15,6 +15,8 @@ const logout = ()=> {
         console.log("Error when trying to execute logout: ", error);
     });
 }
+
+
 </script>
 
 <template>
