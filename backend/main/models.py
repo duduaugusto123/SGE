@@ -111,3 +111,119 @@ class EnviromentsAssignees(models.Model):
     
     def __str__(self):
         return self.environmentFK.name
+    
+
+COURSES_CATEGORY = [
+    ('CAI','Aprendizagem Industrial'),
+    ('FIC','Formação Continuada'),
+    ('CST','Curso Superior Tecnológico'),
+    ('CT','Curso Técnico'),
+]
+
+DURATION_TYPE = [
+    ('H','Horas'),
+    ('S','Semestres'),
+]
+
+COURSES_AREA = [
+    ('TI','Tecnologia da Informação'),
+    ('MEC','Mecânica'),
+    ('AUT','Automação'),
+    ('ELE','Elétrica'),
+]
+
+COURSES_MODALITY = [
+    ('EAD', 'Ensino à Distância'),
+    ('P', 'Presencial'),
+    ('H', 'Híbrido'),
+]
+
+
+class Themes(models.Model):
+    name = models.CharField(max_length=200)    
+    timeLoad = models.IntegerField()
+    
+    def __str__(self):
+        return self.name
+    
+class Courses(models.Model):
+    name = models.CharField(max_length=200)
+    category = models.CharField(max_length=100, choices=COURSES_CATEGORY)
+    duration = models.IntegerField()
+    durationType = models.CharField(max_length=30, choices=DURATION_TYPE)
+    area = models.CharField(max_length=100, choices=COURSES_AREA)
+    modality = models.CharField(max_length=100, choices=COURSES_MODALITY)
+    #themes = models.ManyToManyField(Themes)
+
+    def __str__(self):
+        return self.name
+    
+class CoursesThemes(models.Model):
+    courseFK = models.ForeignKey(Courses, related_name='coursesThemesCourse', on_delete=models.CASCADE)
+    themeFK = models.ForeignKey(Themes, related_name='coursesThemesTheme', on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.courseFK.name
+
+class Classes(models.Model):
+    name = models.CharField(max_length=200)
+    courseFK = models.ForeignKey(Courses, related_name='classesCourses', on_delete=models.CASCADE)
+    startDate = models.DateField()
+    endDate = models.DateField()
+
+    def __str__(self):
+        return self.name
+
+class ClassesDivision(models.Model):
+    name = models.CharField(max_length=200)
+    classFK = models.ForeignKey(Classes, related_name='classesDivisionClass', on_delete=models.CASCADE)
+   
+    def __str__(self):
+        return self.name
+    
+
+class TeacherAlocation(models.Model):
+    classFK = models.ForeignKey(Classes, related_name='teacherAlocationClass', on_delete=models.CASCADE)
+    themeFK = models.ForeignKey(Classes, related_name='teacherAlocationTheme', on_delete=models.CASCADE)    
+    reporterFK = models.ForeignKey(CustomUser, related_name='teacherAlocationReporter', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.themeFK.name
+    
+ALOCATION_STATUS = [
+    ('1','Rascunho'),
+    ('2','Assinalado'),
+    ('3','Concluído'),
+]
+
+class TeacherAlocationDetail(models.Model):
+    teacherFK = models.ForeignKey(CustomUser, related_name='teacherAlocationDetailTeacher', on_delete=models.CASCADE)
+    classDivisionFK = models.ForeignKey(ClassesDivision, related_name='teacherAlocationDetailClassDiv', on_delete=models.CASCADE)
+    createdDate = models.DateTimeField(auto_now_add=True)
+    updatedDate = models.DateTimeField(auto_now=True)
+    alocationStatus = models.CharField(max_length=30, choices=ALOCATION_STATUS, default='1')
+
+    def __str__(self):
+        return self.classDivisionFK.name
+
+WEEK_DAYS = [
+    ('Seg','Segunda-Feira'),
+    ('Ter','Terça-Feira'),
+    ('Qua','Quarta-Feira'),
+    ('Qui','Quinta-Feira'),
+    ('Sex','Sexta-Feira'),
+    ('Sab','Sábado'),
+    ('Dom','Domingo'),
+]
+
+class TeacherAlocationDetailEnvironment(models.Model):
+    teacherAlocationDetailFK = models.ForeignKey(TeacherAlocationDetail, related_name='teacherAlocationDetailEnvTeacher', on_delete=models.CASCADE)
+    environmentFK = models.ForeignKey(Environments, related_name='teacherAlocationDetailEnv', on_delete=models.CASCADE)
+    weekDay = models.CharField(max_length=30, choices=WEEK_DAYS)
+    hourStart = models.TimeField()
+    hourEnd = models.TimeField()
+    startDate = models.DateField()
+    endDate = models.DateField()
+
+    def __str__(self):
+        return self.environmentFK.name
