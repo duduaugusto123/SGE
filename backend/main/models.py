@@ -227,3 +227,48 @@ class TeacherAlocationDetailEnvironment(models.Model):
 
     def __str__(self):
         return self.environmentFK.name
+    
+
+class Deadline(models.Model):
+    targetDate = models.DateTimeField()
+    category = models.CharField(max_length=30, choices=COURSES_CATEGORY)
+
+    def __str__(self):
+        return self.category
+    
+
+class Signatures(models.Model):
+    ownerFK = models.ForeignKey(CustomUser, related_name='signaturesOwner', on_delete=models.CASCADE)
+    createdDate = models.DateTimeField(auto_now_add=True)
+    signature = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return self.ownerFK.name
+    
+PLAN_STATUS = [
+    ('1','Pendente'),
+    ('2','Em Aprovação'),
+    ('3','Aprovado'),
+    ('4','Em revisão'),
+    ('5','Cancelado'),
+]
+    
+class Plan(models.Model):
+    teacherFK = models.ForeignKey(CustomUser, related_name='planTeacher', on_delete=models.CASCADE)
+    courseThemeFK = models.ForeignKey(CoursesThemes, related_name='planCourseTheme', on_delete=models.CASCADE)    
+    status = models.CharField(max_length=30, choices=PLAN_STATUS, default='1')
+    signatureFK = models.ForeignKey(Signatures, related_name='planSignature', on_delete=models.CASCADE, blank=True, null=True)
+    approverFK = models.ForeignKey(CustomUser, related_name='planApprover', on_delete=models.CASCADE, blank=True, null=True)
+
+    def __str__(self):
+        return self.teacherFK.email
+
+class PlanStatus(models.Model):
+    planFK = models.ForeignKey(Plan, related_name='planStatusPlan', on_delete=models.CASCADE)
+    createdDate = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=30, choices=PLAN_STATUS)
+    comment = models.CharField(max_length=500)
+    file = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return self.planFK.teacherFK.email
