@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
+from .manager import *
 
 #criando uma classe de usuário customizada para substituir a padrão com
 #atributos desejados:
@@ -15,6 +16,8 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     
     USERNAME_FIELD = "email" #substituir o login username por e-mail
     REQUIRED_FIELDS = []
+
+    objects = CustomManager()
 
     def __str__(self):
         return self.email    
@@ -55,7 +58,7 @@ class Tasks(models.Model):
     diagnostic = models.CharField(max_length=300, null=True, blank=True)
     type = models.CharField(max_length=100,choices=TASKS_TYPE)
     status = models.CharField(max_length=100,choices=TASKS_STATUS)
-    environmentAlocationFK = models.ForeignKey(EnvironmentAlocation, related_name='tasksEnvironmentAlocation', on_delete=models.CASCADE)
+    #environmentAlocationFK = models.ForeignKey(EnvironmentAlocation, related_name='tasksEnvironmentAlocation', on_delete=models.CASCADE)
     
     def __str__(self):
         return self.title
@@ -77,7 +80,7 @@ class Equipments(models.Model):
         return self.name
 
 class TasksStatus(models.Model):
-    taskFK = models.ForeignKey(Tasks, related_name='tasksAssigneesTask', on_delete=models.CASCADE)
+    taskFK = models.ForeignKey(Tasks, related_name='tasksStatusTask', on_delete=models.CASCADE)
     status = models.CharField(max_length=100,choices=TASKS_STATUS)
     creationDate = models.DateTimeField(auto_now_add=True)
     comment = models.CharField(max_length=300)
