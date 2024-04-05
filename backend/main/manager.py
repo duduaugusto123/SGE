@@ -3,7 +3,7 @@ import random
 
 class CustomManager(BaseUserManager):
 
-    def create_user(self, email, password, registrationNumber, **extra_fields):
+    def create_user(self, email, password, registrationNumber=None, **extra_fields):
 
         if not email:
             raise  ValueError("Invalid e-mail!")
@@ -21,12 +21,13 @@ class CustomManager(BaseUserManager):
             active = True
 
         user = self.model(
-            email=email,
-            password=password,
+            email=email,            
             is_active=active,
+            is_staff=active,
             registrationNumber=regNumber,
             **extra_fields
         )
+        user.set_password(password)
         user.save()
         return user
         
@@ -34,7 +35,7 @@ class CustomManager(BaseUserManager):
 
         user = self.create_user(
             email=email,
-            password=password,            
+            password=password,                     
             **extra_fields
         )
         user.is_superuser = True
