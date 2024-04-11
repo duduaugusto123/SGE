@@ -32,7 +32,7 @@ DEBUG = True
 production_server = 'https://sge-production-ff6c.up.railway.app'
 
 ALLOWED_HOSTS = [
-    '*'
+    '.sge-production-ff6c.up.railway.app/*'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -64,6 +64,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
