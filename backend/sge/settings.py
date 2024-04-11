@@ -34,7 +34,7 @@ production_server = 'https://sge-production-ff6c.up.railway.app'
 ALLOWED_HOSTS = [
     'http://localhost',
     '127.0.0.1',
-    production_server
+    'sge-production-ff6c.up.railway.app'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
