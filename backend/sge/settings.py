@@ -27,12 +27,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 production_server = 'https://sge-production-ff6c.up.railway.app'
 
 ALLOWED_HOSTS = [
-    '*sge-production-ff6c.up.railway.app*'
+    'www.sge-production-ff6c.up.railway.app'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
