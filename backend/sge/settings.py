@@ -32,7 +32,7 @@ DEBUG = True
 production_server = 'https://sge-production-ff6c.up.railway.app'
 
 ALLOWED_HOSTS = [
-    '.sge-production-ff6c.up.railway.app/*'
+    '*sge-production-ff6c.up.railway.app*'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -141,6 +141,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
