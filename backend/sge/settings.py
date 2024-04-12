@@ -38,7 +38,7 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost',
     '127.0.0.1',
-    production_server
+    'https://' + production_server
 ]
 
 
